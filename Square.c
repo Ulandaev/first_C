@@ -7,7 +7,7 @@
 const double  EPS = 1e-17 ;
 
 
-int Comp(double a, double b);
+int Comp(double a, double b);//опыт1
 
 void SolveLine(double a, double b, double *ptr_x, int *ptr_k);
 
