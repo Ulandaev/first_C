@@ -8,15 +8,15 @@ struct line {
     unsigned int len ;
 };
 
-void swap(struct line* a ,struct line* b );
+void Swap(struct line* a ,struct line* b );
 
-int size_file(FILE* ptr_file); //размер файла
+int Size_file(FILE* ptr_file); //размер файла
 
-int add_null(char *ptr_str, int size);  // добавляем \0 в конец каждоц строки вместо \n
+int Add_null(char *ptr_str, int size);  // добавляем \0 в конец каждоц строки вместо \n
 
-void add_struct(struct line *strings, char *ptr_str, int str_len); // заполняем структуру
+void Add_struct(struct line *strings, char *ptr_str, int str_len); // заполняем структуру
 
-void my_qsort(struct line* str, int left, int right, int comp(char *str_1, char *str_2)) ;
+void My_qsort(struct line* str, int left, int right, int comp(char *str_1, char *str_2)) ;
 
 int main()
 {
@@ -26,29 +26,31 @@ int main()
     int str_len = 0 ;
 
     ptr_file = fopen("file.txt", "r");
-    assert(ptr_file != 0);
-    size = size_file(ptr_file);
+    assert(ptr_file != NULL);
+    size = Size_file(ptr_file);
     //printf("%d\n", size) ;
 
     ptr_str = (char*)calloc(size, size * sizeof(char));
+    assert(ptr_str != NULL);
 
     size_t result = fread(ptr_str, sizeof(char), size + 1, ptr_file);
+    assert(ptr_str != NULL);
     fclose(ptr_file) ;
 
-    str_len = add_null(ptr_str, size) ; // кол-во строк
+    str_len = Add_null(ptr_str, size) ; // кол-во строк
     //printf("\n%d", str_len) ;
 
     struct line *strings = (struct line*)calloc(str_len, str_len * sizeof(struct line));
-    assert(strings != 0);
+    assert(strings != NULL);
 
-    add_struct(strings, ptr_str, str_len);
+    Add_struct(strings, ptr_str, str_len);
 
     /*for (int i = 0 ; i < str_len ; ++i) {
         printf("%s %d\n", (strings + i) -> str, (strings + i) -> len);
     }*/
     //printf("\n");
 
-    my_qsort(strings, 0, str_len-1, strcmp);
+    My_qsort(strings, 0, str_len-1, strcmp);
 
     for (int i = 0 ; i < str_len ; ++i) {
         printf("%s\n", (strings + i) -> str);
@@ -59,7 +61,8 @@ int main()
 
 }
 
-int size_file(FILE* ptr_file) {
+int Size_file(FILE* ptr_file) {
+    assert(ptr_file != NULL);
     int size = NULL;
     fseek(ptr_file , 0 , SEEK_END );
     size = ftell(ptr_file);
@@ -67,7 +70,8 @@ int size_file(FILE* ptr_file) {
     return size ;
 }
 
-int add_null(char *ptr_str, int size) {
+int Add_null(char *ptr_str, int size) {
+    assert(ptr_str != NULL && size != NULL);
     int str_len = 0;
     char *nul = 0;
     char *begin_line;
@@ -84,7 +88,8 @@ int add_null(char *ptr_str, int size) {
     return str_len ;
 }
 
-void add_struct(struct line *strings, char *ptr_str, int str_len) {
+void Add_struct(struct line *strings, char *ptr_str, int str_len) {
+    assert(strings != NULL || ptr_str != NULL || str_len != NULL);
     char *begin = 0, *end = 0;
     int size_string = 0; //??
     for (int i = 0 ; i < str_len ; ++i) {
@@ -98,13 +103,15 @@ void add_struct(struct line *strings, char *ptr_str, int str_len) {
 }
 
 
-void swap(struct line *a ,struct line *b ) {
+void Swap(struct line *a ,struct line *b ) {
+    assert(a != NULL || b != NULL);
     struct line tmp = *a ;
     *a = *b;
     *b = tmp;
 }
 
-void my_qsort(struct line *strings, int left, int right, int comp(char *str_1, char *str_2)) {
+void My_qsort(struct line *strings, int left, int right, int comp(char *str_1, char *str_2)) {
+    assert(strings != NULL || left != NULL || right != NULL);
     int i = left;
     int j = right;
     struct line pivot =strings[(left + right) / 2];
@@ -116,15 +123,15 @@ void my_qsort(struct line *strings, int left, int right, int comp(char *str_1, c
             --j;
         }
         if(i <= j) {
-            swap(&strings[i], &strings[j]) ;
+            Swap(&strings[i], &strings[j]) ;
             ++i;
             --j;
         }
     }
     if(left < j) {
-    my_qsort(strings, left, j, strcmp) ;
+    My_qsort(strings, left, j, strcmp) ;
     }
     if(right > i) {
-    my_qsort(strings, i, right, strcmp) ;
+    My_qsort(strings, i, right, strcmp) ;
     }
 }
