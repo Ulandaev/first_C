@@ -5,7 +5,7 @@
 
 struct line {
     char* str ;
-    unsigned int len ;
+    size_t len ;
 };
 
 void Swap(struct line* a ,struct line* b );
@@ -20,10 +20,10 @@ void My_qsort(struct line* str, int left, int right, int comp(char *str_1, char 
 
 int main()
 {
-    FILE *ptr_file ;
+    FILE *ptr_file;
     char *ptr_str;
     int size = 0;
-    int str_len = 0 ;
+    int str_len = 0;
 
     ptr_file = fopen("file.txt", "r");
     assert(ptr_file != NULL);
@@ -52,10 +52,15 @@ int main()
 
     My_qsort(strings, 0, str_len-1, strcmp);
 
+    FILE *ptr_file1;
+    ptr_file1 = fopen("file1.txt", "w");
+
     for (int i = 0 ; i < str_len ; ++i) {
         printf("%s\n", (strings + i) -> str);
+        fprintf(ptr_file1, "%s\n", (strings +i) -> str);
     }
 
+    fclose(ptr_file1);
     free(ptr_str) ;
     return 0;
 
